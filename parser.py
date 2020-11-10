@@ -34,12 +34,4 @@ index = InvertedIndex(my_tweets)
 
 op = Operators(index.dic)
 
-print(op.L("VotaPorElTioBigote"))
-
-""" result1 = op.AND(op.OR(op.L("Gandalf"),op.L("Orden")),op.L("Gimli"))
-print(" ")
-result2 = op.NOT(op.AND(op.L("Pippin"),op.L("Sauron")),op.L("Mago"))
-print(" ")
-result3 = op.OR(op.NOT(op.L("ciudad"),op.L("batalla")),op.L("Blanco"))
-print(" ")
-result4 = op.OR(op.NOT(op.AND(op.L("Rey"),op.L("Frodo")),op.L("Oeste")),op.L("Bosque")) """
+result1 = op.OR(op.L("Legales"),op.L("Cortesia"))
