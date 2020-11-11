@@ -17,11 +17,11 @@ class Operators:
         answer=[]
         if len(list1) > len(list2):
             for i,freq in list1:
-                if (i,freq) in list2:
+                if i in list2:
                     answer.append((i,freq))
         else:
             for i,freq in list2:
-                if (i,freq) in list1:
+                if i in list1:
                     answer.append((i,freq))
         print("AND result:",answer)
         return answer
@@ -32,7 +32,7 @@ class Operators:
         if len(list1) > len(list2):
             answer = list1
             for i,freq in list2:
-                if (i,freq) not in answer:
+                if i not in answer:
                     answer.append((i,freq))
         else:
             answer = list2
