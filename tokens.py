@@ -24,18 +24,11 @@ class Tokens:
         return stoplist
 
     def replace_tokens(self,tokens):
-        replace = (('â','a'),('å',''),('ą',''),('ā',''),('á',''),('à',''),('ä',''),('ã',''),
-                   ('ė',''),('ê',''),('ę',''),('ē',''),('è',''),('é',''),('ë',''),
-                   ('ī',''),('î',''),('į',''),('ì',''),('ï',''),('í',''),
-                   ('ō',''),('ø',''),('õ',''),('ô',''),('ö',''),('ò',''),('ó',''),
-                   ('û','u'),('ū',''),('ù',''),('ü',''),('ú',''),
-                   ('-',''),('`',''),('º',''),('_',' '),('.',''),('…',''),('¡',''),('~',''),
-                   ('||',''),('/',''),('|',''),('£',''),('¿',''),('?',''),('”',''),('“',''),('–',''))
+        replace = (('â','a'),('å',''),('ą',''),('ā',''),('á',''),('à',''),('ä',''),('ã',''),('ė',''),('ê',''),('ę',''),('ē',''),('è',''),('é',''),('ë',''),('ī',''),('î',''),('į',''),('ì',''),('ï',''),('í',''),('ō',''),('ø',''),('õ',''),('ô',''),('ö',''),('ò',''),('ó',''),('û','u'),('ū',''),('ù',''),('ü',''),('ú',''),('-',''),('`',''),('º',''),('_',' '),('.',''),('…',''),('¡',''),('~',''),('||',''),('|',''),('£',''),('¿',''),('?',''),('”',''),('“',''),('–',''))
         for a,b in replace:
             tokens = tokens.replace(a,b)
-            #tokens = [item.replace(a,b) for item in tokens]
         return tokens
-    
+
     def remove_emoji(self,text):
         emoji_pattern = re.compile("["
             u"\U00010000-\U0010ffff"
@@ -47,13 +40,20 @@ class Tokens:
             u"\U000024C2-\U0001F251"
             "]+", flags=re.UNICODE)
         return emoji_pattern.sub(r'', text)
-        
+
+    def remove_links(self,text):
+        new_text = []
+        for term in text:
+            if not term.startswith("http"):
+                new_text.append(term)
+        return new_text
+
     def remove_stopwords(self,text):
-        #stoplist = stopwords.words("spanish")
         stoplist = self.stopwords_split()
         text = self.remove_emoji(str(text))
         text = self.replace_tokens(text)
         tokens = nltk.word_tokenize(text)
+        tokens = self.remove_links(tokens)
         self.clean_tokens = tokens.copy()
         for token in tokens:
             if token in stoplist:

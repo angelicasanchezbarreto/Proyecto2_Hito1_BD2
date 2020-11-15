@@ -8,8 +8,12 @@ class Operators:
     def L(self,word):
         stemmer = SnowballStemmer('spanish')
         newWord = stemmer.stem(word.lower())
-        ids=self.dic[newWord]
-        print("TweetIds for",word,":",ids)
+        ids = []
+        if newWord in self.dic:
+            ids=self.dic[newWord]
+            print("TweetIds for",word,":",ids)
+        else:
+            print("The word",word,"does not belong to the documents.")
         return ids
         
             

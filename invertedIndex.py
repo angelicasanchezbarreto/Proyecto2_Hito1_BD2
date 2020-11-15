@@ -16,18 +16,6 @@ class InvertedIndex:
         self.write_to_file()
         return self.dic
     
-    """ def replace_in_dic(self,word,current_id):
-        if (word in self.dic):
-            ids = self.dic[word]
-            already_in=False
-            for i in ids:
-                if current_id is i: 
-                    already_in=True
-            if already_in is False:
-                self.dic[word].append(current_id)
-        else:
-            self.dic[word]=[current_id] """
-    
     def replace_in_dic(self,word,current_id):
         if (word in self.dic):
             ids = self.dic[word]
@@ -40,9 +28,7 @@ class InvertedIndex:
                     self.dic[word]=new_list
             if already_in is False:
                 self.dic[word].append((current_id,1))
-                #self.dic[word].append(current_id)
         else:
-            #self.dic[word]={current_id,1}
             self.dic.setdefault(word,[]).append((current_id,1))
     
     def set_index_dic(self,my_tweets):

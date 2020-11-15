@@ -34,4 +34,4 @@ index = InvertedIndex(my_tweets)
 
 op = Operators(index.dic)
 
-result1 = op.OR(op.L("Legales"),op.L("Cortesia"))
+result1 = op.OR(op.L("Hola"),op.L("Cortesia"))
