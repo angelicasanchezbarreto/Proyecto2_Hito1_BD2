@@ -11,6 +11,18 @@ class Tokens:
     def __init__(self,tweet_text):
         self.remove_stopwords(tweet_text)
 
+    def remove_stopwords(self,text):
+        stoplist = self.stopwords_split()
+        text = self.remove_emoji(str(text))
+        text = self.replace_tokens(text)
+        tokens = nltk.word_tokenize(text)
+        tokens = self.remove_links(tokens)
+        self.clean_tokens = tokens.copy()
+        for token in tokens:
+            if token in stoplist:
+                self.clean_tokens.remove(token)   
+        self.reduced_tokens = self.word_reduction(self.clean_tokens)
+
     def word_reduction(self,tokens):
         stemmer = SnowballStemmer('spanish')
         reduced_tokens = []
@@ -32,10 +44,10 @@ class Tokens:
     def remove_emoji(self,text):
         emoji_pattern = re.compile("["
             u"\U00010000-\U0010ffff"
-            #u"\U0001F600-\U0001F64F"  # emoticons
-            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-            u"\U0001F680-\U0001F6FF"  # transport & map symbols
-            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+            #u"\U0001F600-\U0001F64F"
+            u"\U0001F300-\U0001F5FF"
+            u"\U0001F680-\U0001F6FF"
+            u"\U0001F1E0-\U0001F1FF"
             u"\U00002702-\U000027B0"
             u"\U000024C2-\U0001F251"
             "]+", flags=re.UNICODE)
@@ -47,15 +59,3 @@ class Tokens:
             if not term.startswith("http"):
                 new_text.append(term)
         return new_text
-
-    def remove_stopwords(self,text):
-        stoplist = self.stopwords_split()
-        text = self.remove_emoji(str(text))
-        text = self.replace_tokens(text)
-        tokens = nltk.word_tokenize(text)
-        tokens = self.remove_links(tokens)
-        self.clean_tokens = tokens.copy()
-        for token in tokens:
-            if token in stoplist:
-                self.clean_tokens.remove(token)   
-        self.reduced_tokens = self.word_reduction(self.clean_tokens)
