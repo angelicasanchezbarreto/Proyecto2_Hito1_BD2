@@ -8,8 +8,18 @@ class Tokens:
     original_tokens=[]
     clean_tokens=[]
     reduced_tokens=[]
-    def __init__(self,tweet_text):
-        self.remove_stopwords(tweet_text)
+        
+    def edit_query(self,tweet_text):
+        result = []
+        stoplist = self.stopwords_split()
+        tweet_text = self.replace_tokens(tweet_text)
+        tokens = nltk.word_tokenize(tweet_text)
+        result = tokens.copy()
+        for token in tokens:
+            if token in stoplist:
+                result.remove(token)   
+        return result
+        #self.reduced_tokens = self.word_reduction(self.clean_tokens)
 
     def remove_stopwords(self,text):
         stoplist = self.stopwords_split()

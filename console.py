@@ -1,7 +1,7 @@
 import os
 from parser import Parser
 from invertedIndex import InvertedIndex
-from operators import Operators
+from functions import Functions
 
 
 class Console:
@@ -13,11 +13,10 @@ class Console:
         
     def print_in_console(self):
         print("Ingresa la palabra a buscar:")
-        word = input()
-        op = Operators(self.my_tweets_index)
-        docs = op.L(word)
-        for doc in docs:
-            print(self.my_tweets[doc[0]])
+        query = input()
+        op = Functions(self.my_tweets_index,self.my_tweets)
+        query_terms = op.retrieval_cosine(query)
+        print(query_terms)
 
 
 #directory = r"/home/lica-pc/2020-2/Base de Datos/Proyecto2/Hito1/Proyecto2_Hito1_BD2/clean"

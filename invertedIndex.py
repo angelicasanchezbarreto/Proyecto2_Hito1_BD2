@@ -33,7 +33,8 @@ class InvertedIndex:
     
     def set_index_dic(self,my_tweets):
         for tweet_id in self.my_tweets:
-            tokens = Tokens(self.my_tweets[tweet_id])
+            tokens = Tokens()
+            tokens.remove_stopwords(self.my_tweets[tweet_id])
             current_id = tweet_id
             for word in tokens.reduced_tokens:
                 self.replace_in_dic(word,current_id)
