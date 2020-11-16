@@ -25,8 +25,8 @@ class Tokens:
         stoplist = self.stopwords_split()
         text = self.remove_emoji(str(text))
         text = self.replace_tokens(text)
+        text = self.remove_links(text)
         tokens = nltk.word_tokenize(text)
-        tokens = self.remove_links(tokens)
         self.clean_tokens = tokens.copy()
         for token in tokens:
             if token in stoplist:
@@ -42,7 +42,7 @@ class Tokens:
 
     def stopwords_split(self):
         stoplist = json.load(open('stopwords.json'))['words']
-        stoplist += ['¿','?','.',',',';',':','#','*','^','«','»','º','(',')','"',"''",'``','@','¡','!','/']
+        stoplist += ['¿','?','.',',',';',':','#','*','^','«','»','º','(',')','"',"''",'``','@','¡','!','/','%','$','=',"'",'&']
         return stoplist
 
     def replace_tokens(self,tokens):
@@ -64,8 +64,9 @@ class Tokens:
         return emoji_pattern.sub(r'', text)
 
     def remove_links(self,text):
-        new_text = []
-        for term in text:
-            if not term.startswith("http"):
-                new_text.append(term)
-        return new_text
+        text = re.sub('(?:\s)http[^, ]*', '', text)
+        text = re.sub('(?:\s)www[^, ]*', '', text)
+        text = re.sub('(?:\s)//[^, ]*', '', text)
+        pattern = r'[0-9]'
+        text = re.sub(pattern, '', text)
+        return text

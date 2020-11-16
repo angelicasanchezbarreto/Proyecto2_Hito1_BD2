@@ -12,18 +12,20 @@ def idf(num,N):
     return round(math.log10(N/num),2)
 
 class Functions:
-    dic = dict()
     my_tweets = dict()
-    def __init__(self,dic,my_tweets):
-        self.dic=dic
+    inverted_index = dict()
+    tf_idf_dic = dict()
+    def __init__(self,inverted_index,my_tweets,tf_idf_dic):
+        self.inverted_index=inverted_index
         self.my_tweets=my_tweets
+        self.tf_idf_dic=tf_idf_dic
 
     def L(self,word):
         stemmer = SnowballStemmer('spanish')
         newWord = stemmer.stem(word.lower())
         ids = []
-        if newWord in self.dic:
-            ids=self.dic[newWord]
+        if newWord in self.inverted_index:
+            ids=self.inverted_index[newWord]
             print("TweetIds for",word,":",ids,"\n")
         else:
             print("The word",word,"does not belong to the documents.")
@@ -68,13 +70,12 @@ class Functions:
         print("NOT result:",answer)
         return answer
     
-    def get_norms(self,dictionary):
-        values = dictionary.values()
-        vector = list(values)
-        normas = np.linalg.norm(vector)
-        new_dic = {}
-        for elem,i in dictionary:
-            new_dic[elem] = normas[i]
+    #def get_norms(self,dictionary):
+        
+
+        #normas = np.linalg.norm(vector)
+        #for elem,i in dictionary:
+         #   new_dic[elem] = normas[i]
     
     def retrieval_cosine(self,query):
         scores = dict()
@@ -93,7 +94,7 @@ class Functions:
                 else:
                     new_value = scores[doc[0]] + tf(doc[1])*tf(query_weights[term])
                     scores[doc[0]] = new_value
-        #norms = self.get_norms(self.dic)
-        #for id in scores:
-         #   scores[id] = scores[id]/(norms[id]*self.get_norms(query_terms))
+        """ norms = self.get_norms(self.inverted_index)
+        for id in scores:
+            scores[id] = scores[id]/(norms[id]*self.get_norms(query_terms)) """
         return scores

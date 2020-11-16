@@ -2,11 +2,19 @@ from tokens import Tokens
 import pandas as pd
 import numpy as np
 import json
+import math 
+
+def tf(num):
+    return round(math.log10(1+num),2)
+
+def idf(num,N):
+    return round(math.log10(N/num),2)
 
 class InvertedIndex:
     dic=dict()
     my_tweets=dict()
     df_dic=pd.DataFrame
+    tf_idf_dic = dict()
     def __init__(self,my_tweets):
         self.my_tweets=my_tweets
         self.execute_index()
@@ -43,6 +51,18 @@ class InvertedIndex:
         #df_dic = self.get_data_frame()
         #print(sorted_dic)
         return sorted_dic
+    
+    def set_tf_idf(self):
+        N = len(self.my_tweets)
+        vector = dict()
+        for term in self.dic:
+            docs = self.dic[term] #doc list of pairs
+            size = len(docs)
+            for doc_freq in docs:
+                tf_idf = tf(doc_freq[1])*idf(size,N)
+                self.tf_idf_dic.setdefault(doc_freq[0],[]).append((term,tf_idf))
+                vector.setdefault(doc_freq[0],[]).append(tf_idf)
+        print(vector)
     
     def get_data_frame(self):
         self.df_dic = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in self.dic.items() ])).T.rename_axis('Term').add_prefix('tweetIds')
