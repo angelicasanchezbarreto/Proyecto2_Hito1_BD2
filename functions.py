@@ -75,7 +75,7 @@ class Functions:
 
         #normas = np.linalg.norm(vector)
         #for elem,i in dictionary:
-         #   new_dic[elem] = normas[i]
+            #new_dic[elem] = normas[i]
     
     def retrieval_cosine(self,query):
         scores = dict()

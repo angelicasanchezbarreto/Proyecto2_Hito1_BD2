@@ -61,7 +61,8 @@ class InvertedIndex:
             for doc_freq in docs:
                 tf_idf = tf(doc_freq[1])*idf(size,N)
                 self.tf_idf_dic.setdefault(doc_freq[0],[]).append((term,tf_idf))
-                vector.setdefault(doc_freq[0],[]).append(tf_idf)
+                vector.setdefault(doc_freq[0],[]).append((tf_idf))
+        print(self.tf_idf_dic)
         print(vector)
     
     def get_data_frame(self):
