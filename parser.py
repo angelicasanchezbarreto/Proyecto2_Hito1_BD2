@@ -30,3 +30,7 @@ class Parser:
                 id = tweet["id"]
                 text = tweet["text"]
                 self.my_tweets[id]=text
+
+    def write_tweets_to_file(self):
+        with open('tweets.json','w') as file:
+            json.dump(self.my_tweets,file)

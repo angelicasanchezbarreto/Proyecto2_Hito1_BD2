@@ -3,33 +3,22 @@ from nltk.stem import SnowballStemmer
 from tokens import Tokens
 import collections
 import math 
-from invertedIndex import InvertedIndex
+from invertedIndexMem import InvertedIndexMem
+from invertedIndex import tf
 import numpy as np
 import operator
 
-def tf(num):
-    return round(math.log10(1+num),2)
-
-def idf(num,N):
-    return round(math.log10(N/num),2)
-
 class Functions:
-    my_tweets = dict()
-    inverted_index_dic = dict()
-    tf_idf_dic = dict()
-    norms = dict()
-    def __init__(self,inverted_index,my_tweets):
-        self.inverted_index_dic=inverted_index.dic
-        self.my_tweets=my_tweets
-        self.tf_idf_dic=inverted_index.tf_idf_dic
-        self.norms=inverted_index.norms
+    inverted_index = InvertedIndexMem()
+    
+    def __init__(self,inverted_index):
+        self.inverted_index=inverted_index
 
     def L(self,word):
         stemmer = SnowballStemmer('spanish')
         newWord = stemmer.stem(word.lower())
-        ids = []
-        if newWord in self.inverted_index_dic:
-            ids=self.inverted_index_dic[newWord]
+        ids = self.inverted_index.get_doc_ids(newWord)
+        if len(ids)>0:
             print("TweetIds for",word,":",ids,"\n")
         else:
             print("The word",word,"does not belong to the documents.")
@@ -96,6 +85,7 @@ class Functions:
                     new_value = scores[doc[0]] + tf(doc[1])*tf(query_weights[term])
                     scores[doc[0]] = new_value
         for id in scores:
-            scores[id] = round(scores[id]/(self.norms[id]*self.get_query_norms(query_weights)),2)
+            norm_value = self.inverted_index.get_norms(str(id))
+            scores[id] = round(scores[id]/(norm_value*self.get_query_norms(query_weights)),2)
         scores = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)
         return scores
