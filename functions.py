@@ -3,7 +3,9 @@ from nltk.stem import SnowballStemmer
 from tokens import Tokens
 import collections
 import math 
+from invertedIndex import InvertedIndex
 import numpy as np
+import operator
 
 def tf(num):
     return round(math.log10(1+num),2)
@@ -13,19 +15,21 @@ def idf(num,N):
 
 class Functions:
     my_tweets = dict()
-    inverted_index = dict()
+    inverted_index_dic = dict()
     tf_idf_dic = dict()
-    def __init__(self,inverted_index,my_tweets,tf_idf_dic):
-        self.inverted_index=inverted_index
+    norms = dict()
+    def __init__(self,inverted_index,my_tweets):
+        self.inverted_index_dic=inverted_index.dic
         self.my_tweets=my_tweets
-        self.tf_idf_dic=tf_idf_dic
+        self.tf_idf_dic=inverted_index.tf_idf_dic
+        self.norms=inverted_index.norms
 
     def L(self,word):
         stemmer = SnowballStemmer('spanish')
         newWord = stemmer.stem(word.lower())
         ids = []
-        if newWord in self.inverted_index:
-            ids=self.inverted_index[newWord]
+        if newWord in self.inverted_index_dic:
+            ids=self.inverted_index_dic[newWord]
             print("TweetIds for",word,":",ids,"\n")
         else:
             print("The word",word,"does not belong to the documents.")
@@ -44,7 +48,6 @@ class Functions:
                     answer.append((i,freq))
         print("AND result:",answer)
         return answer
-
 
     def OR(self,list1,list2):
         answer=[]
@@ -70,12 +73,10 @@ class Functions:
         print("NOT result:",answer)
         return answer
     
-    #def get_norms(self,dictionary):
-        
-
-        #normas = np.linalg.norm(vector)
-        #for elem,i in dictionary:
-            #new_dic[elem] = normas[i]
+    def get_query_norms(self,query_weights):
+        data = list(query_weights.values())
+        norma = round(np.linalg.norm(data),2)
+        return norma
     
     def retrieval_cosine(self,query):
         scores = dict()
@@ -94,7 +95,7 @@ class Functions:
                 else:
                     new_value = scores[doc[0]] + tf(doc[1])*tf(query_weights[term])
                     scores[doc[0]] = new_value
-        """ norms = self.get_norms(self.inverted_index)
         for id in scores:
-            scores[id] = scores[id]/(norms[id]*self.get_norms(query_terms)) """
+            scores[id] = round(scores[id]/(self.norms[id]*self.get_query_norms(query_weights)),2)
+        scores = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)
         return scores

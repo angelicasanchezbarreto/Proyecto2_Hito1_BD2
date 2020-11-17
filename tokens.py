@@ -19,7 +19,6 @@ class Tokens:
             if token in stoplist:
                 result.remove(token)   
         return result
-        #self.reduced_tokens = self.word_reduction(self.clean_tokens)
 
     def remove_stopwords(self,text):
         stoplist = self.stopwords_split()

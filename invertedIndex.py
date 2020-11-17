@@ -12,15 +12,18 @@ def idf(num,N):
 
 class InvertedIndex:
     dic=dict()
-    my_tweets=dict()
+    my_tweets_dic=dict()
     df_dic=pd.DataFrame
-    tf_idf_dic = dict()
-    def __init__(self,my_tweets):
-        self.my_tweets=my_tweets
+    tf_idf_dic=dict()
+    norms_dic=dict()
+    norms=dict()
+    def __init__(self,my_tweets_dic):
+        self.my_tweets_dic=my_tweets_dic
         self.execute_index()
 
     def execute_index(self):
         self.dic = self.set_index_dic(self)
+        self.set_tf_idf()
         self.write_to_file()
         return self.dic
     
@@ -39,10 +42,10 @@ class InvertedIndex:
         else:
             self.dic.setdefault(word,[]).append((current_id,1))
     
-    def set_index_dic(self,my_tweets):
-        for tweet_id in self.my_tweets:
+    def set_index_dic(self,my_tweets_dic):
+        for tweet_id in self.my_tweets_dic:
             tokens = Tokens()
-            tokens.remove_stopwords(self.my_tweets[tweet_id])
+            tokens.remove_stopwords(self.my_tweets_dic[tweet_id])
             current_id = tweet_id
             for word in tokens.reduced_tokens:
                 self.replace_in_dic(word,current_id)
@@ -53,17 +56,21 @@ class InvertedIndex:
         return sorted_dic
     
     def set_tf_idf(self):
-        N = len(self.my_tweets)
-        vector = dict()
+        N = len(self.my_tweets_dic)
         for term in self.dic:
             docs = self.dic[term] #doc list of pairs
             size = len(docs)
             for doc_freq in docs:
-                tf_idf = tf(doc_freq[1])*idf(size,N)
+                tf_idf = round(tf(doc_freq[1])*idf(size,N),2)
                 self.tf_idf_dic.setdefault(doc_freq[0],[]).append((term,tf_idf))
-                vector.setdefault(doc_freq[0],[]).append((tf_idf))
-        print(self.tf_idf_dic)
-        print(vector)
+                self.norms_dic.setdefault(doc_freq[0],[]).append(tf_idf)
+        self.set_norms()
+        #print(self.tf_idf_dic,"\n")
+        #print(vector)
+        
+    def set_norms(self):
+        for id in self.norms_dic:
+            self.norms[id] = round(np.linalg.norm(self.norms_dic[id]),2)
     
     def get_data_frame(self):
         self.df_dic = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in self.dic.items() ])).T.rename_axis('Term').add_prefix('tweetIds')
@@ -71,13 +78,13 @@ class InvertedIndex:
         self.df_dic.reset_index(inplace=True)
         return self.df_dic
         
-    def print_full(self):
+    def print_full_dataframe(self):
         self.get_data_frame()
         pd.set_option('display.max_rows', len(self.df_dic))
         print(self.df_dic)
         pd.reset_option('display.max_rows')
         
-    def print(self):
+    def print_inverted_index(self):
         for item in self.dic:
             print(item,self.dic[item])
 
