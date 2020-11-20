@@ -14,26 +14,26 @@ class Console:
     #inverted_index = InvertedIndex(parser.my_tweets)
     n_size = 0
     inverted_index_mem = InvertedIndexMem()
-    
+
     def get_size(self):
         with open('size.txt','r') as file:
             self.n_size = file
-     
-    def print_in_console(self):
-        print("Ingresa la palabra a buscar:")
-        query = input()
+    
+    def print_in_console(self, phrase):
+        #print("Ingresa la palabra a buscar:")
+        #query = input()
         functions = Functions(self.inverted_index_mem)
-        query_terms = functions.retrieval_cosine(query)
-        #for term in query_terms:
-            #self.print_full_tweet(term)
-        print(query_terms)
-        #print(self.inverted_index.norms)
+        query_terms = functions.retrieval_cosine(phrase)
+        tweets_list = dict()
+        for term in query_terms:
+            tweet = self.print_full_tweet(str(term[0]))
+            tweets_list[tweet] = term
+        return tweets_list
         
     def print_full_tweet(self,tweet_id):
-        tweet = self.inverted_index_mem.get_tweet(tweet_id)
-        print(tweet,"\n")
+        return self.inverted_index_mem.get_tweet(tweet_id)
         
 
-console = Console()
-console.print_in_console()
+#console = Console()
+#console.print_in_console()
     

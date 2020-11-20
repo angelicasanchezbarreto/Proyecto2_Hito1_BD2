@@ -16,14 +16,10 @@
     <h3>Resultado de la búsqueda</h3>
     <p>
         <ul>
-        {% if Tweets %}
-            {% for t in Tweets %}
-                <li>{{t}}</li>
+            {% for key, value in Tweets.items %}
+            <li>{{ key }} : {{ value }}</li>
             {% endfor %}
-        {% else %}
-            <p>No hay tweets relacionados a lo que solicitó.</p>
-        {% endif %}
         </ul>
     </p>
-    </bdoy>
+    </body>
 </html>

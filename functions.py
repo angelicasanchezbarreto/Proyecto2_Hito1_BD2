@@ -18,10 +18,10 @@ class Functions:
         stemmer = SnowballStemmer('spanish')
         newWord = stemmer.stem(word.lower())
         ids = self.inverted_index.get_doc_ids(newWord)
-        if len(ids)>0:
-            print("TweetIds for",word,":",ids,"\n")
-        else:
-            print("The word",word,"does not belong to the documents.")
+        # if len(ids)>0:
+        #     print("TweetIds for",word,":",ids,"\n")
+        # else:
+        #     print("The word",word,"does not belong to the documents.")
         return ids
         
             
