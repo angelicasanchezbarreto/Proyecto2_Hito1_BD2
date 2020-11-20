@@ -54,7 +54,7 @@ ROOT_URLCONF = 'front_end.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/Users/alejandrotero/Documents/UTEC/Ciclo 6/BD2/Proyecto2_Hito1_BD2/web_page/front_end/front_end/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

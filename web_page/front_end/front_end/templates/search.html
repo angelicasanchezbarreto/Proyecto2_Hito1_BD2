@@ -1,9 +1,29 @@
 <html>
+    <head>
+        <title>Search engine of words</title>
+    </head>
     <body>
     <h1>
     <center>
     Bienvenido al buscador de palabras de twitter, escribe la frase que desea buscar
     </center>
     </h1>
+    {% include "bar.html" %}
+    <form action="/search/" method = "GET">
+         <input type = "text" name = "tweet"><br>
+         <input type = "submit" value = "Buscar">
+    </form>
+    <h3>Resultado de la búsqueda</h3>
+    <p>
+        <ul>
+        {% if Tweets %}
+            {% for t in Tweets %}
+                <li>{{t}}</li>
+            {% endfor %}
+        {% else %}
+            <p>No hay tweets relacionados a lo que solicitó.</p>
+        {% endif %}
+        </ul>
+    </p>
     </bdoy>
 </html>
